@@ -1,0 +1,45 @@
+---
+- name: Install Docker on Remote Debian Server
+  hosts: proxy
+  become: yes  # Gain root privileges
+
+  tasks:
+    - name: Transfer the Docker installation script to the remote server
+      ansible.builtin.copy:
+        src: ./install_docker.sh
+        dest: /tmp/install_docker.sh
+        mode: '0755'  # Ensures the script is executable
+
+    - name: Execute the Docker installation script
+      ansible.builtin.shell: /tmp/install_docker.sh
+      register: script_output
+
+    - name: Show script output
+      ansible.builtin.debug:
+        msg: "{{ script_output.stdout_lines }}"
+
+    - name: Clean up - remove the script
+      ansible.builtin.file:
+        path: /tmp/install_docker.sh
+        state: absent
+
+
+    - name: Install Git on Debian/Ubuntu
+      apt:
+        name: git
+        state: present
+      when: ansible_facts['os_family'] == "Debian"
+
+
+    - name: Clone docker-tinyproxy repository
+      git:
+        repo: 'https://github.com/maorojloo/docker-tinyproxy.git'
+        dest: "~/docker-tinyproxy"
+        version: master
+      become: no
+
+
+    - name: Run docker-compose up
+      command: docker compose up -d
+      args:
+        chdir: "~/docker-tinyproxy"
