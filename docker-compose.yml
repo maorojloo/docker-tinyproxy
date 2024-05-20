@@ -17,7 +17,7 @@ services:
       STAT_HOST: tinyproxy.stats
       MAX_CLIENTS: 100
       # A space separated list:
-      ALLOWED_NETWORKS: 127.0.0.1/8 10.0.0.0/8 
+      ALLOWED_NETWORKS: 127.0.0.1/8 10.0.0.0/8 95.217.70.61 95.271.70.5 95.271.70.0/8  
       # One of Critical, Error, Warning, Notice, Connect, Info
       LOG_LEVEL: Notice
       # Maximum number of seconds idle connections are allowed to remain open
